@@ -53,6 +53,7 @@ int main()
 
 	// Setup OpenGL options
 	glEnable(GL_DEPTH_TEST);
+
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
@@ -60,7 +61,7 @@ int main()
 	InputReader* test;
 	try
 	{
-		 test = new InputReader("translational_hollow_box.txt");
+		 test = new InputReader("rotational_hat.txt");
 	}
 	catch (const char* msg)
 	{
@@ -102,11 +103,10 @@ int main()
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
 
-		glBindVertexArray(0); // Unbind VAO
 		glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind VBO
+		glBindVertexArray(0); // Unbind VAO
+		
 
-
-	GLfloat rotation = 9.0f;
 	glPointSize(10);
 
 	while (!glfwWindowShouldClose(window))
@@ -150,18 +150,17 @@ int main()
 		glBindVertexArray(VAO);
 		glm::mat4 model;
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
 		glDrawElements(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0);
 
 		//glDrawArrays(GL_POINTS, 0, size);
-
-		glBindVertexArray(0);
-		
-		
 		//Swap Buffers	
-		glfwSwapInterval(1);
+		//glfwSwapInterval(1);
+		glBindVertexArray(0);
+
 		glfwSwapBuffers(window);
+
+
 	}
 
 

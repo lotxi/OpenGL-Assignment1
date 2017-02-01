@@ -27,17 +27,6 @@ InputReader::InputReader(std::string file)
 
 }
 
-//std::vector<glm::vec3>* InputReader::getProfileCurves()
-//{
-//	std::cout << "Returning profile curve" << std::endl;
-//	return profileCurves;
-//}
-
-//std::vector<glm::vec3>* InputReader::getTrajectoryCurves()
-//{
-//	std::cout << "Returning trajectory curve" << std::endl;
-//	return trajectoryCurves;
-//}
 
 GLuint* InputReader::getIndices()
 {
@@ -162,7 +151,7 @@ void InputReader::readRotationalSweep()
 	float rotationAngle = glm::radians(360.0f / float(spans));
 
 	verticesSize = pSize * spans * 6;
-	indicesSize = (pSize - 1) * spans * 6;
+	indicesSize = (pSize-1) * spans * 6;
 	int verticesIndex = 0;
 	int indicesIndex = 0;
 	vertices = new GLfloat[verticesSize];
@@ -172,9 +161,9 @@ void InputReader::readRotationalSweep()
 	{
 		for (int p=0; p < pSize; p++) // For every point in the given profile curve
 		{
-			glm::vec4 point = glm::vec4((*profileCurves)[0], 1.0f); // Create a vec4 from the point
-			glm::mat4 rotation = glm::mat4(1.0f);
-			point = point * glm::rotate(rotation, rotationAngle * s, glm::vec3(0, 0, 1));
+			glm::vec4 point = glm::vec4((*profileCurves)[p], 1); // Create a vec4 from the point
+			//glm::mat4 rotation = glm::mat4(1.0f);
+			point = point * glm::rotate(glm::mat4(1.0f), rotationAngle * s, glm::vec3(0, 0, 1));
 			
 			vertices[verticesIndex++] = point.x;
 			vertices[verticesIndex++] = point.y;
@@ -201,16 +190,24 @@ void InputReader::readRotationalSweep()
 				}
 				else
 				{
+					std::cout << "Calculating the missing piece...." << std::endl;
 					//first triangle
+					
 					indices[indicesIndex] = verticesIndex / 6 - 1;
-					indices[indicesIndex] = verticesIndex / 6 - 1 - 1;
-					indices[indicesIndex] = (verticesSize / 6) - 1 - pSize + (verticesIndex / 6) - 1;
+					
+					indices[indicesIndex+1] = verticesIndex / 6 - 1 - 1;
+					
+					indices[indicesIndex+2] = (verticesSize / 6) - 1 - pSize + (verticesIndex / 6) - 1;
+				
 					indicesIndex += 3;
 
 					//second triangle
 					indices[indicesIndex] = verticesIndex / 6 - 1;
-					indices[indicesIndex] = verticesSize / 6 - 1 - pSize + verticesIndex / 6 -1;
-					indices[indicesIndex] = verticesSize / 6 - pSize + verticesIndex / 6 - 1 - 1;
+
+					indices[indicesIndex+1] = verticesSize / 6 - 1 - pSize + verticesIndex / 6;
+	
+					indices[indicesIndex+2] = verticesSize / 6 - pSize + verticesIndex / 6 - 1 - 1;
+
 					indicesIndex += 3;
 					
 				}
