@@ -57,8 +57,17 @@ int main()
 
 
 	Shader testShader = Shader("test.vs", "test.frag");
-
-	InputReader* test = new InputReader("rotational_bowl.txt");
+	InputReader* test;
+	try
+	{
+		 test = new InputReader("translational_hollow_box.txt");
+	}
+	catch (const char* msg)
+	{
+		// Error reading input file
+		std::cerr << msg << std::endl;
+		return -1;
+	}
 	
 	std::vector<glm::vec3> *pCurve = test->getProfileCurves();
 	int pSize = pCurve->size();
@@ -202,7 +211,7 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
-		glDrawElements(GL_POINTS, indexSize, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0);
 
 		//glDrawArrays(GL_POINTS, 0, size);
 

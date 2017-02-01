@@ -2,8 +2,7 @@
 
 InputReader::InputReader(std::string file)
 {
-	input.open(file);
-
+	input.open(file); 
 	profileCurves = nullptr;
 	trajectoryCurves = nullptr;
 	if (input.is_open())
@@ -23,7 +22,7 @@ InputReader::InputReader(std::string file)
 
 	}
 	else {
-		std::cout << "Error reading file: make sure the file name is correct" << std::endl;
+		throw "Error reading input file";
 	}
 
 }
