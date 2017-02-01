@@ -15,11 +15,23 @@ class InputReader
 public:
 	InputReader(std::string file);
 	~InputReader();
-	std::vector<glm::vec3>* getProfileCurves();
-	std::vector<glm::vec3>* getTrajectoryCurves();
-	bool getTranslational() const { return translational; }
+	/*std::vector<glm::vec3>* getProfileCurves();
+	std::vector<glm::vec3>* getTrajectoryCurves();*/
+
+
+	int getVerticesSize() const
+	{
+		return verticesSize;
+	}
+
+	int getIndicesSize() const
+	{
+		return indicesSize;
+	}
+
+	GLuint* getIndices();
+	GLfloat* getVertices();
 private:
-	bool translational;
 	std::ifstream input;
 	//Sweep readTranslationalSweep(std::ifstream & input);
 	//Sweep readRotationalSweep(std::ifstream & input);
@@ -27,10 +39,13 @@ private:
 	std::vector<glm::vec3>* trajectoryCurves;
 	void readTranslationalSweep();
 	void readRotationalSweep();
-	glm::vec3 parseLine(std::string line);
+	glm::vec3 parseLine(std::string line) const;
 	std::vector<glm::vec3>* storePoints(int points, std::ifstream & input);
 	int verticesSize;
 	int indicesSize;
+
+
 	GLfloat *vertices;
 	GLuint *indices;
+
 };

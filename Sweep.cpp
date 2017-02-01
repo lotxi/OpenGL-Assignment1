@@ -60,7 +60,7 @@ int main()
 	InputReader* test;
 	try
 	{
-		 test = new InputReader("translational_hollow_box.txt");
+		 test = new InputReader("rotational_bowl.txt");
 	}
 	catch (const char* msg)
 	{
@@ -69,69 +69,10 @@ int main()
 		return -1;
 	}
 	
-	std::vector<glm::vec3> *pCurve = test->getProfileCurves();
-	int pSize = pCurve->size();
-
-
-	std::vector<glm::vec3> *tCurve = test->getTrajectoryCurves();
-	int tSize = tCurve->size();
-
-	std::cout << "Psize: " << pSize << std::endl;
-	std::cout << "Tsize: " << tSize << std::endl;
-
-	//std::vector<glm::vec3> vContainer;
-	GLuint size = pSize * tSize * 6;
-	GLuint indexSize = (pSize - 1)*(tSize - 1) * 6;
-	int *indices = new int[indexSize];
-	int indexIndices = 0;
-	GLfloat *vertices = new GLfloat[size];
-
-	int k = 0; // K is used to track indices in the vertices array
-
-	for (int i = 0; i<pSize; i++)
-	{
-		// Copy the initial profile curve into the vertices array
-		vertices[k++] = (*pCurve)[i].x;
-		vertices[k++] = (*pCurve)[i].y;
-		vertices[k++] = (*pCurve)[i].z;
-		vertices[k++] = 0;
-		vertices[k++] = 0;
-		vertices[k++] = (*pCurve)[i].z;
-	}
-
-	for (int i = 0; i < tSize - 1; i++)
-	{
-		for (int j = 0; j < pSize; j++)
-		{
-			// Translate each vertex from the previous iteration of P by the matching value in vector (t_(i+1)-t_(i))
-			glm::vec4 temp = glm::vec4(vertices[k - 6 * pSize], vertices[k - 6 * pSize + 1], vertices[k - 6 * pSize + 2], 1.0f);
-			glm::mat4 translation = glm::translate(glm::mat4(), (*tCurve)[i + 1] - (*tCurve)[i]);
-			temp = translation * temp;
-
-			// Copy the translated vertices to vertices array
-			vertices[k++] = temp.x;
-			vertices[k++] = temp.y;
-			vertices[k++] = temp.z;
-			vertices[k++] = 0;
-			vertices[k++] = 0;
-			vertices[k++] = temp.z;
-
-			// Calculate the indices of the vertices that will form triangles
-			if (j != pSize - 1)
-			{
-				// First triangle
-				indices[indexIndices] = k / 6 - 1;
-				indices[indexIndices + 1] = k / 6;
-				indices[indexIndices + 2] = k / 6 - pSize;
-				// Second triangle
-				indices[indexIndices + 3] = k / 6 - 1;
-				indices[indexIndices + 4] = k / 6 - pSize;
-				indices[indexIndices + 5] = k / 6 - pSize - 1;
-
-				indexIndices += 6;
-			}
-		}
-	}
+	GLfloat* vertices = test->getVertices();
+	GLuint* indices = test->getIndices();
+	int indexSize = test->getIndicesSize();
+	int size = test->getVerticesSize();
 
 	for (int i=0; i<indexSize; i++)
 	{
