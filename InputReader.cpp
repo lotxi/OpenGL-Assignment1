@@ -50,15 +50,6 @@ GLfloat* InputReader::getVertices()
 }
 
 
-int main1()
-{
-	InputReader* test = new InputReader("translational_shape.txt");
-	// Store the original values of profile curve in vertices matrix
-	delete(test);
-	return 1;
-	
-}
-
 std::vector<glm::vec3>* InputReader::storePoints(int points, std::ifstream & input)
 {
 	std::vector<glm::vec3> *result=new std::vector<glm::vec3>;

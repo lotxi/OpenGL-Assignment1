@@ -251,6 +251,7 @@ paket-files/
 .idea/
 *.sln.iml
 
+
 # =========================
 # Operating System Files
 # =========================
@@ -301,3 +302,12 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+*.jpg
+*.png
+
+Debug/ 
+*/
+
+*.sln
+*.vcxproj
+*.vcxproj.*

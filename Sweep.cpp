@@ -52,7 +52,7 @@ int main()
 	glViewport(0, 0, WIDTH, HEIGHT);
 
 	// Setup OpenGL options
-	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
@@ -60,7 +60,7 @@ int main()
 	InputReader* test;
 	try
 	{
-		 test = new InputReader("rotational_bowl.txt");
+		 test = new InputReader("translational_hollow_box.txt");
 	}
 	catch (const char* msg)
 	{
