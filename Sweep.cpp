@@ -135,7 +135,7 @@ int main()
 
 		// Projection
 		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(camera.Zoom), (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.0f, 100.0f);
+		projection = glm::perspective(glm::radians(camera.Zoom), (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
 
 		// Get Uniform locations
 		GLint viewLoc = glGetUniformLocation(testShader.Program, "view");
