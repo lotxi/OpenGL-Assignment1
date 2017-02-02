@@ -61,7 +61,7 @@ int main()
 	InputReader* test;
 	try
 	{
-		 test = new InputReader("rotational_hat.txt");
+		 test = new InputReader("rotational_bowl.txt");
 	}
 	catch (const char* msg)
 	{
@@ -149,7 +149,14 @@ int main()
 		// Draw container
 		glBindVertexArray(VAO);
 		glm::mat4 model;
+		
+		// Process rotations as necessary
+		model = glm::translate(model, glm::vec3(0.5f, -0.5f, 0.0f));
+		model = glm::rotate(model, glm::radians(camera.Rotation.x), glm::vec3(1, 0, 0));
+		model = glm::rotate(model, glm::radians(camera.Rotation.y), glm::vec3(0, 1, 0));
+		model = glm::rotate(model, glm::radians(camera.Rotation.z), glm::vec3(0, 0, 1));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
 
 		glDrawElements(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0);
 
@@ -176,11 +183,29 @@ int main()
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-	std::cout << key << std::endl;
+	
 
+	switch (key)
+	{
+	case GLFW_KEY_ESCAPE:
+		if (action == GLFW_PRESS)
+		{
+			glfwSetWindowShouldClose(window, GL_TRUE);
+		}
+		break;
+	
+	case GLFW_KEY_1:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		break;
+	case GLFW_KEY_2:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		break;
+	case GLFW_KEY_3:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+		break;
 
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
+	}
+		
 	if (key >= 0 && key < 1024)
 	{
 		if (action == GLFW_PRESS)
@@ -227,5 +252,13 @@ void Do_Movement()
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (keys[GLFW_KEY_D])
 		camera.ProcessKeyboard(RIGHT, deltaTime);
+	if (keys[GLFW_KEY_RIGHT])
+		camera.Rotation.y -= deltaTime *50.0f;
+	if (keys[GLFW_KEY_LEFT])
+		camera.Rotation.y += deltaTime *50.0f;
+	if (keys[GLFW_KEY_UP])
+		camera.Rotation.x -= deltaTime *50.0f;
+	if (keys[GLFW_KEY_DOWN])
+		camera.Rotation.x += deltaTime *50.0f;
 }
 

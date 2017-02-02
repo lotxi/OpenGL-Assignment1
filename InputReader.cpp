@@ -19,7 +19,6 @@ InputReader::InputReader(std::string file)
 		else {
 			readRotationalSweep();
 		}
-
 	}
 	else {
 		throw "Error reading input file";
@@ -117,18 +116,20 @@ void InputReader::readTranslationalSweep()
 			vertices[verticesIndex++] = temp.z;
 
 			// Calculate the indices of the vertices that will form triangles
-			if (j != pSize - 1)
+			if (j != pSize - 1) // Proceed only if this is not the bottom point in the profile curve
 			{
+				int bottomRight = verticesIndex / 6;
+				int topRight = bottomRight - 1;
+				int topLeft = topRight-pSize;
+				int bottomLeft = bottomRight-pSize;
 				// First triangle
-				indices[indexIndices] = verticesIndex / 6 - 1;
-				indices[indexIndices + 1] = verticesIndex / 6;
-				indices[indexIndices + 2] = verticesIndex / 6 - pSize;
+				indices[indexIndices++] = bottomRight;
+				indices[indexIndices++] = topRight;
+				indices[indexIndices ++] = bottomLeft; 
 				// Second triangle
-				indices[indexIndices + 3] = verticesIndex / 6 - 1;
-				indices[indexIndices + 4] = verticesIndex / 6 - pSize;
-				indices[indexIndices + 5] = verticesIndex / 6 - pSize - 1;
-
-				indexIndices += 6;
+				indices[indexIndices ++] = topRight;
+				indices[indexIndices ++] = topLeft;
+				indices[indexIndices ++] = bottomLeft;
 			}
 		}
 	}
@@ -152,10 +153,12 @@ void InputReader::readRotationalSweep()
 
 	verticesSize = pSize * spans * 6;
 	indicesSize = (pSize-1) * spans * 6;
-	int verticesIndex = 0;
-	int indicesIndex = 0;
+
 	vertices = new GLfloat[verticesSize];
 	indices = new GLuint[indicesSize];
+
+	int verticesIndex = 0;
+	int indicesIndex = 0;
 
 	for (int s = 0; s<spans; s++) // For every span
 	{
@@ -174,34 +177,42 @@ void InputReader::readRotationalSweep()
 
 			if (p>0)
 			{
+				int topRight = verticesIndex / 6 - 1;
+				int bottomRight = topRight - 1;
+
 				if (s>0)
 				{
-					indices[indicesIndex++] = verticesIndex / 6 - 1;
-					indices[indicesIndex++] = verticesIndex / 6 - 1 - 1;
-					indices[indicesIndex++] = verticesIndex / 6 - 1 - pSize - 1;
+					
+					int topLeft = topRight - pSize;;
+					int bottomLeft = topLeft - 1;
+					// First triangle
+					indices[indicesIndex++] = topRight;
+					indices[indicesIndex++] = bottomRight;
+					indices[indicesIndex++] = bottomLeft;
 
-					indices[indicesIndex++] = indices[indicesIndex - 3];
-					indices[indicesIndex++] = indices[indicesIndex-2] + 1;
-					indices[indicesIndex++] = indices[indicesIndex-3];
+					indices[indicesIndex++] = topRight;
+					indices[indicesIndex++] = bottomLeft;
+					indices[indicesIndex++] = topLeft;
+					
 
 
 				}
-				else
+				else // Generate indices for triangles between the initial curve and the final one
 				{
-					std::cout << "Calculating the missing piece...." << std::endl;
-					//first triangle
-					indices[indicesIndex++] = verticesIndex / 6 - 1;
-					indices[indicesIndex++] = verticesIndex / 6 - 1 - 1;
-					indices[indicesIndex++] = (verticesSize / 6) - 1 - pSize + (verticesIndex / 6)- 1;
+					
+					int topLeft = verticesSize / 6 - pSize + verticesIndex / 6 - 1;
+					int bottomLeft = topLeft - 1;
+					// First triangle
+					indices[indicesIndex++] = topRight;
+					indices[indicesIndex++] = bottomRight;
+					indices[indicesIndex++] = bottomLeft;
 
-					//second triangle
-					indices[indicesIndex++] = indices[indicesIndex-3];
-					indices[indicesIndex++] = verticesSize / 6 - pSize + verticesIndex / 6 - 1;
-					indices[indicesIndex++] = indices[indicesIndex-1]-1;
+					// Second triangle
+					indices[indicesIndex++] = topRight;
+					indices[indicesIndex++] = topLeft;
+					indices[indicesIndex++] = bottomLeft;
 				}
 			}
-
-			
 		}
 	}
 
