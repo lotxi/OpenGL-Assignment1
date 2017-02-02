@@ -13,8 +13,8 @@
 #include <GLFW/glfw3.h>
 // Shaders
 #include "Shader.h"
-// SOIL
-#include <SOIL/SOIL.h>
+//// SOIL
+//#include <SOIL/SOIL.h>
 // Camera
 #include "Camera.h"
 #include "InputReader.h"

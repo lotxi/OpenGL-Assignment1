@@ -2,7 +2,6 @@
 
 
 layout (location = 0) in vec3 position;
-layout (location = 1) in vec3 color;
 
 
 out vec3 ourColor;
@@ -16,5 +15,5 @@ uniform mat4 projection;
 void main()
 {
 	gl_Position = projection * view * model * vec4(position, 1.0f);
-	ourColor = color;
+	ourColor = vec3(.8, 0.6-position.z, 1.0);
 }

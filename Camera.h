@@ -20,7 +20,7 @@ enum Camera_Movement {
 
 // Default camera values
 const GLfloat YAW = -90.0f;
-const GLfloat PITCH = -60.0f;
+const GLfloat PITCH = -15.0f;
 const GLfloat SPEED = 3.0f;
 const GLfloat SENSITIVTY = 0.25f;
 const GLfloat ZOOM = 45.0f;
@@ -73,7 +73,7 @@ public:
 		glm::vec3 camDir;
 		if (lock)
 		{
-			camDir = glm::vec3();
+			camDir = glm::vec3(); // Look at the origin
 		}
 		else camDir = this->Position + Front;
 		return glm::lookAt(this->Position, camDir, this->Up);

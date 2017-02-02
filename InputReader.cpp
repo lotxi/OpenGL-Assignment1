@@ -79,7 +79,7 @@ void InputReader::readTranslationalSweep()
 	std::cout << "Tsize: " << tSize << std::endl;
 
 	//std::vector<glm::vec3> vContainer;
-	verticesSize = pSize * tSize * 6;
+	verticesSize = pSize * tSize * 3;
 	indicesSize = (pSize - 1)*(tSize - 1) * 6;
 	indices = new GLuint[indicesSize];
 	vertices = new GLfloat[verticesSize];
@@ -92,9 +92,9 @@ void InputReader::readTranslationalSweep()
 		vertices[verticesIndex++] = (*profileCurves)[i].x;
 		vertices[verticesIndex++] = (*profileCurves)[i].y;
 		vertices[verticesIndex++] = (*profileCurves)[i].z;
-		vertices[verticesIndex++] = 0.9f;
-		vertices[verticesIndex++] = 1.0 - (*profileCurves)[i].z;
-		vertices[verticesIndex++] = 0.0f;
+		//vertices[verticesIndex++] = 0.9f;
+		//vertices[verticesIndex++] = 1.0 - (*profileCurves)[i].z;
+		//vertices[verticesIndex++] = 0.0f;
 	}
 
 	for (int i = 0; i < tSize - 1; i++)
@@ -102,8 +102,8 @@ void InputReader::readTranslationalSweep()
 		for (int j = 0; j < pSize; j++)
 		{
 			// Translate each vertex from the previous iteration of P by the matching value in vector (t_(i+1)-t_(i))
-			glm::vec4 temp = glm::vec4(vertices[verticesIndex - 6 * pSize], vertices[verticesIndex - 6 * pSize + 1],
-				vertices[verticesIndex - 6 * pSize + 2], 1.0f);
+			glm::vec4 temp = glm::vec4(vertices[verticesIndex - 3 * pSize], vertices[verticesIndex - 3 * pSize + 1],
+				vertices[verticesIndex - 3 * pSize + 2], 1.0f);
 			glm::mat4 translation = glm::translate(glm::mat4(), (*trajectoryCurves)[i + 1] - (*trajectoryCurves)[i]);
 			temp = translation * temp;
 
@@ -111,14 +111,14 @@ void InputReader::readTranslationalSweep()
 			vertices[verticesIndex++] = temp.x;
 			vertices[verticesIndex++] = temp.y;
 			vertices[verticesIndex++] = temp.z;
-			vertices[verticesIndex++] = 0.9f;
-			vertices[verticesIndex++] = 1.0 - temp.z;
-			vertices[verticesIndex++] = 0.0f;
+			//vertices[verticesIndex++] = 0.9f;
+			//vertices[verticesIndex++] = 1.0 - temp.z;
+			//vertices[verticesIndex++] = 0.0f;
 
 			// Calculate the indices of the vertices that will form triangles
 			if (j != pSize - 1) // Proceed only if this is not the bottom point in the profile curve
 			{
-				int bottomRight = verticesIndex / 6;
+				int bottomRight = verticesIndex / 3;
 				int topRight = bottomRight - 1;
 				int topLeft = topRight-pSize;
 				int bottomLeft = bottomRight-pSize;
@@ -151,7 +151,7 @@ void InputReader::readRotationalSweep()
 
 	float rotationAngle = glm::radians(360.0f / float(spans));
 
-	verticesSize = pSize * spans * 6;
+	verticesSize = pSize * spans * 3;
 	indicesSize = (pSize-1) * spans * 6;
 
 	vertices = new GLfloat[verticesSize];
@@ -171,14 +171,12 @@ void InputReader::readRotationalSweep()
 			vertices[verticesIndex++] = point.x;
 			vertices[verticesIndex++] = point.y;
 			vertices[verticesIndex++] = point.z;
-			vertices[verticesIndex++] = 0.9f;
-			vertices[verticesIndex++] = 1.0-point.z;
-			vertices[verticesIndex++] = 0.0f;
+
 
 
 			if (p>0)
 			{
-				int topRight = verticesIndex / 6 - 1;
+				int topRight = verticesIndex / 3 - 1;
 				int bottomRight = topRight - 1;
 
 				if (s>0)
@@ -201,7 +199,7 @@ void InputReader::readRotationalSweep()
 				else // Generate indices for triangles between the initial curve and the final one
 				{
 					
-					int topLeft = verticesSize / 6 - pSize + verticesIndex / 6 - 1;
+					int topLeft = verticesSize / 3 - pSize + verticesIndex / 3 - 1;
 					int bottomLeft = topLeft - 1;
 					// First triangle
 					indices[indicesIndex++] = topRight;
