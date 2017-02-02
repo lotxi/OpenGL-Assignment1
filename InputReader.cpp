@@ -92,9 +92,9 @@ void InputReader::readTranslationalSweep()
 		vertices[verticesIndex++] = (*profileCurves)[i].x;
 		vertices[verticesIndex++] = (*profileCurves)[i].y;
 		vertices[verticesIndex++] = (*profileCurves)[i].z;
-		vertices[verticesIndex++] = 0;
-		vertices[verticesIndex++] = 0;
-		vertices[verticesIndex++] = (*profileCurves)[i].z;
+		vertices[verticesIndex++] = 0.9f;
+		vertices[verticesIndex++] = 1.0 - (*profileCurves)[i].z;
+		vertices[verticesIndex++] = 0.0f;
 	}
 
 	for (int i = 0; i < tSize - 1; i++)
@@ -111,9 +111,9 @@ void InputReader::readTranslationalSweep()
 			vertices[verticesIndex++] = temp.x;
 			vertices[verticesIndex++] = temp.y;
 			vertices[verticesIndex++] = temp.z;
-			vertices[verticesIndex++] = 0;
-			vertices[verticesIndex++] = 0;
-			vertices[verticesIndex++] = temp.z;
+			vertices[verticesIndex++] = 0.9f;
+			vertices[verticesIndex++] = 1.0 - temp.z;
+			vertices[verticesIndex++] = 0.0f;
 
 			// Calculate the indices of the vertices that will form triangles
 			if (j != pSize - 1) // Proceed only if this is not the bottom point in the profile curve
@@ -171,9 +171,10 @@ void InputReader::readRotationalSweep()
 			vertices[verticesIndex++] = point.x;
 			vertices[verticesIndex++] = point.y;
 			vertices[verticesIndex++] = point.z;
-			vertices[verticesIndex++] = 0;
-			vertices[verticesIndex++] = 0;
-			vertices[verticesIndex++] = point.z;
+			vertices[verticesIndex++] = 0.9f;
+			vertices[verticesIndex++] = 1.0-point.z;
+			vertices[verticesIndex++] = 0.0f;
+
 
 			if (p>0)
 			{
@@ -236,14 +237,6 @@ glm::vec3 InputReader::parseLine(std::string line) const
 
 InputReader::~InputReader()
 {
-	//std::cout << "Destructor for InputReader has been called" << std::endl;
-	//if (profileCurves!=nullptr)
-	//{
-	//	delete profileCurves;
-	//}
-	//if (trajectoryCurves != nullptr)
-	//{
-	//	delete trajectoryCurves;
-	//}
+
 }
 

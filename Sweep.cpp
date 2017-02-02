@@ -7,9 +7,10 @@ const GLuint WIDTH = 800, HEIGHT = 800;
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void Do_Movement();
 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 5.0f, 3.0f));
 bool keys[1024];
 GLfloat lastX = WIDTH / 2.0, lastY = HEIGHT / 2.0;
 bool firstMouse = true;
@@ -25,7 +26,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
 	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Assignment 1", nullptr, nullptr);
 	if (window == nullptr)
@@ -38,6 +39,7 @@ int main()
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
+	glfwSetWindowSizeCallback(window, framebuffer_size_callback);
 
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
@@ -46,10 +48,12 @@ int main()
 		return -1;
 	}
 
+	int width, height;
+	glfwGetFramebufferSize(window, &width, &height);
+	glViewport(0, 0, width, height);
 
-
-	//	glfwGetFramebufferSize(window, &width, &height);
-	glViewport(0, 0, WIDTH, HEIGHT);
+	glfwGetWindowSize(window, &width, &height);
+	//glfwSetWindowAspectRatio(window, width, height);
 
 	// Setup OpenGL options
 	glEnable(GL_DEPTH_TEST);
@@ -61,7 +65,7 @@ int main()
 	InputReader* test;
 	try
 	{
-		 test = new InputReader("rotational_bowl.txt");
+		 test = new InputReader("rotational_hat.txt");
 	}
 	catch (const char* msg)
 	{
@@ -123,7 +127,7 @@ int main()
 
 		// Render
 		// Clear the colorbuffer
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.0f, 0.07f, 0.58f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Activate shader
@@ -149,9 +153,8 @@ int main()
 		// Draw container
 		glBindVertexArray(VAO);
 		glm::mat4 model;
-		
 		// Process rotations as necessary
-		model = glm::translate(model, glm::vec3(0.5f, -0.5f, 0.0f));
+//		model = glm::translate(model, glm::vec3(0.5f, -0.5f, 0.0f));
 		model = glm::rotate(model, glm::radians(camera.Rotation.x), glm::vec3(1, 0, 0));
 		model = glm::rotate(model, glm::radians(camera.Rotation.y), glm::vec3(0, 1, 0));
 		model = glm::rotate(model, glm::radians(camera.Rotation.z), glm::vec3(0, 0, 1));
@@ -184,14 +187,11 @@ int main()
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
 	
-
+if (action == GLFW_PRESS){
 	switch (key)
 	{
 	case GLFW_KEY_ESCAPE:
-		if (action == GLFW_PRESS)
-		{
-			glfwSetWindowShouldClose(window, GL_TRUE);
-		}
+		glfwSetWindowShouldClose(window, GL_TRUE);
 		break;
 	
 	case GLFW_KEY_1:
@@ -203,9 +203,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	case GLFW_KEY_3:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 		break;
-
+	case GLFW_KEY_F:
+		camera.lock = !camera.lock;
 	}
-		
+
+}
 	if (key >= 0 && key < 1024)
 	{
 		if (action == GLFW_PRESS)
@@ -215,6 +217,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 
 
+}
+
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
@@ -227,12 +235,14 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 		firstMouse = false;
 	}
 
+	if (!camera.lock){
 	GLfloat xoffset = xpos - lastX;
 	GLfloat yoffset = lastY - ypos; // Reversed since y-coordinates range from bottom to top
 	lastX = xpos;
 	lastY = ypos;
 
 	camera.ProcessMouseMovement(xoffset, yoffset);
+	}
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -244,6 +254,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 void Do_Movement()
 {
 	// Camera movement
+	if (!camera.lock){
 	if (keys[GLFW_KEY_W])
 		camera.ProcessKeyboard(FORWARD, deltaTime);
 	if (keys[GLFW_KEY_S])
@@ -252,13 +263,16 @@ void Do_Movement()
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (keys[GLFW_KEY_D])
 		camera.ProcessKeyboard(RIGHT, deltaTime);
+	}
+
+
 	if (keys[GLFW_KEY_RIGHT])
-		camera.Rotation.y -= deltaTime *50.0f;
-	if (keys[GLFW_KEY_LEFT])
 		camera.Rotation.y += deltaTime *50.0f;
+	if (keys[GLFW_KEY_LEFT])
+		camera.Rotation.y -= deltaTime *50.0f;
 	if (keys[GLFW_KEY_UP])
-		camera.Rotation.x -= deltaTime *50.0f;
-	if (keys[GLFW_KEY_DOWN])
 		camera.Rotation.x += deltaTime *50.0f;
+	if (keys[GLFW_KEY_DOWN])
+		camera.Rotation.x -= deltaTime *50.0f;
 }
 

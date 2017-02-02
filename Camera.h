@@ -20,7 +20,7 @@ enum Camera_Movement {
 
 // Default camera values
 const GLfloat YAW = -90.0f;
-const GLfloat PITCH = 0.0f;
+const GLfloat PITCH = -60.0f;
 const GLfloat SPEED = 3.0f;
 const GLfloat SENSITIVTY = 0.25f;
 const GLfloat ZOOM = 45.0f;
@@ -36,6 +36,7 @@ public:
 	glm::vec3 Up;
 	glm::vec3 Right;
 	glm::vec3 WorldUp;
+	bool lock;
 	// Eular Angles
 	GLfloat Yaw;
 	GLfloat Pitch;
@@ -53,6 +54,7 @@ public:
 		this->Yaw = yaw;
 		this->Pitch = pitch;
 		this->updateCameraVectors();
+		lock = false;
 	}
 	// Constructor with scalar values
 	Camera(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLfloat upZ, GLfloat yaw, GLfloat pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVTY), Zoom(ZOOM)
@@ -62,12 +64,19 @@ public:
 		this->Yaw = yaw;
 		this->Pitch = pitch;
 		this->updateCameraVectors();
+		lock = false;
 	}
 
 	// Returns the view matrix calculated using Eular Angles and the LookAt Matrix
 	glm::mat4 GetViewMatrix()
 	{
-		return glm::lookAt(this->Position, this->Position + this->Front, this->Up);
+		glm::vec3 camDir;
+		if (lock)
+		{
+			camDir = glm::vec3();
+		}
+		else camDir = this->Position + Front;
+		return glm::lookAt(this->Position, camDir, this->Up);
 	}
 
 	// Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
