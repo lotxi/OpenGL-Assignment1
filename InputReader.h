@@ -2,12 +2,12 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <GLM/GLM.hpp>
+#include "../glm/glm.hpp"
 #include "Sweep.h"
 #include <sstream>
 #include <istream>
 #include <vector>
-#include <GL/glew.h>
+#include "../glew/glew.h"	// include GL Extension Wrangler
 #include <iterator>
 
 class InputReader

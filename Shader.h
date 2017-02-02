@@ -5,7 +5,7 @@
 #include <sstream>
 #include <iostream>
   
-#include <GL/glew.h>; // Include glew to get all the required OpenGL headers
+#include "../glew/glew.h"	// include GL Extension Wrangler
 
 class Shader
 {

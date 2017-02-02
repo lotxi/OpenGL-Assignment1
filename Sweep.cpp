@@ -1,7 +1,7 @@
 #include "Sweep.h"
 
 //Dimensions
-const GLuint WIDTH = 800, HEIGHT = 800;
+GLuint WIDTH = 800, HEIGHT = 800;
 
 // Function prototypes
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -64,11 +64,11 @@ int main()
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// Create shader program
-	Shader shader = Shader("test.vs", "test.frag");
+	Shader shader = Shader("shader.vs", "shader.frag");
 	InputReader* input;
 	try
 	{
-		 input = new InputReader("input_a1.txt");
+		 input = new InputReader("rotational_bowl.txt");
 	}
 	catch (const char* msg)
 	{
@@ -227,13 +227,14 @@ if (action == GLFW_PRESS){
 			keys[key] = false;
 	}
 
-
 }
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
+	WIDTH = width;
+	HEIGHT = height;
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)

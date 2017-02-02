@@ -4,9 +4,9 @@
 #include <vector>
 
 // GL Includes
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include "../glew/glew.h"	// include GL Extension Wrangler
+#include "../glm/glm.hpp"
+#include "../glm/gtc/matrix_transform.hpp"
 
 
 
