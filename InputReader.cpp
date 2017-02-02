@@ -176,15 +176,13 @@ void InputReader::readRotationalSweep()
 			{
 				if (s>0)
 				{
-					indices[indicesIndex] = verticesIndex / 6 - 1;
-					indices[indicesIndex+1] = verticesIndex / 6 - 1 - 1;
-					indices[indicesIndex+2] = verticesIndex / 6 - 1 - pSize - 1;
-					indicesIndex += 3;
+					indices[indicesIndex++] = verticesIndex / 6 - 1;
+					indices[indicesIndex++] = verticesIndex / 6 - 1 - 1;
+					indices[indicesIndex++] = verticesIndex / 6 - 1 - pSize - 1;
 
-					indices[indicesIndex] = verticesIndex / 6 - 1;
-					indices[indicesIndex + 1] = verticesIndex / 6 - pSize - 1;
-					indices[indicesIndex + 2] = verticesIndex / 6 - 1 - pSize - 1;
-					indicesIndex += 3;
+					indices[indicesIndex++] = indices[indicesIndex - 3];
+					indices[indicesIndex++] = indices[indicesIndex-2] + 1;
+					indices[indicesIndex++] = indices[indicesIndex-3];
 
 
 				}
@@ -192,24 +190,14 @@ void InputReader::readRotationalSweep()
 				{
 					std::cout << "Calculating the missing piece...." << std::endl;
 					//first triangle
-					
-					indices[indicesIndex] = verticesIndex / 6 - 1;
-					
-					indices[indicesIndex+1] = verticesIndex / 6 - 1 - 1;
-					
-					indices[indicesIndex+2] = (verticesSize / 6) - 1 - pSize + (verticesIndex / 6) - 1;
-				
-					indicesIndex += 3;
+					indices[indicesIndex++] = verticesIndex / 6 - 1;
+					indices[indicesIndex++] = verticesIndex / 6 - 1 - 1;
+					indices[indicesIndex++] = (verticesSize / 6) - 1 - pSize + (verticesIndex / 6)- 1;
 
 					//second triangle
-					indices[indicesIndex] = verticesIndex / 6 - 1;
-
-					indices[indicesIndex+1] = verticesSize / 6 - 1 - pSize + verticesIndex / 6;
-	
-					indices[indicesIndex+2] = verticesSize / 6 - pSize + verticesIndex / 6 - 1 - 1;
-
-					indicesIndex += 3;
-					
+					indices[indicesIndex++] = indices[indicesIndex-3];
+					indices[indicesIndex++] = verticesSize / 6 - pSize + verticesIndex / 6 - 1;
+					indices[indicesIndex++] = indices[indicesIndex-1]-1;
 				}
 			}
 
